@@ -1,79 +1,69 @@
-// ======================================
-// SAMPLE DATA
-// Replace this with API calls later
-// ======================================
+const API_BASE_URL = "http://localhost:3000";
 
-const users = [
-    {
-        id: 1,
-        name: "Alice Johnson",
-        role: "Freelancer",
-        rating: 4.9
-    },
-    {
-        id: 2,
-        name: "Bob Smith",
-        role: "Client",
-        rating: 0.0
-    },
-    {
-        id: 3,
-        name: "Charlie Brown",
-        role: "Freelancer",
-        rating: 4.7
-    },
-    {
-        id: 4,
-        name: "David Wilson",
-        role: "Client",
-        rating: 0.0
-    },
-    {
-        id: 5,
-        name: "Emma Davis",
-        role: "Freelancer",
-        rating: 4.8
-    },
-    {
-        id: 6,
-        name: "Frank Thomas",
-        role: "Freelancer",
-        rating: 4.3
+// ===============================
+// Fetch All Users
+// ===============================
+async function fetchUsers() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/users`);
+        const result = await response.json();
+
+        renderUsers(result.data);
+
+    } catch (error) {
+        console.error("Error fetching users:", error);
     }
-];
+}
 
-const projects = [
-    {
-        id: 1,
-        title: "E-Commerce Website",
-        budget: 50000,
-        status: "Active"
-    },
-    {
-        id: 2,
-        title: "Portfolio Website",
-        budget: 15000,
-        status: "Completed"
-    },
-    {
-        id: 3,
-        title: "Inventory Management System",
-        budget: 75000,
-        status: "Active"
-    },
-    {
-        id: 4,
-        title: "Restaurant Ordering App",
-        budget: 60000,
-        status: "Pending"
+// ===============================
+// Fetch High Rated Freelancers
+// ===============================
+async function fetchFreelancers() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/freelancers`);
+        const result = await response.json();
+
+        renderFreelancers(result.data);
+
+    } catch (error) {
+        console.error("Error fetching freelancers:", error);
     }
-];
+}
 
-// ======================================
-// REGISTERED USERS
-// ======================================
+// ===============================
+// Fetch Active Projects
+// ===============================
+async function fetchProjects() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/projects`);
+        const result = await response.json();
 
-function renderUsers() {
+        renderProjects(result.data);
+
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+    }
+}
+
+// ===============================
+// Fetch Budget
+// ===============================
+async function fetchBudget() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/budget`);
+        const result = await response.json();
+
+        renderBudget(result.data);
+
+    } catch (error) {
+        console.error("Error fetching budget:", error);
+    }
+}
+
+// ===============================
+// Render Users
+// ===============================
+function renderUsers(users) {
 
     const table = document.getElementById("usersTable");
 
@@ -83,10 +73,10 @@ function renderUsers() {
 
         table.innerHTML += `
             <tr>
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.role}</td>
-                <td>${user.rating.toFixed(1)}</td>
+                <td>${user.User_ID}</td>
+                <td>${user.User_Name}</td>
+                <td>${user.User_Role}</td>
+                <td>${user.Skill_Rating}</td>
             </tr>
         `;
 
@@ -94,84 +84,70 @@ function renderUsers() {
 
 }
 
-// ======================================
-// HIGH RATED FREELANCERS
-// ======================================
-
-function renderFreelancers() {
+// ===============================
+// Render Freelancers
+// ===============================
+function renderFreelancers(freelancers) {
 
     const table = document.getElementById("freelancersTable");
 
     table.innerHTML = "";
 
-    users
-        .filter(user => user.role === "Freelancer" && user.rating >= 4.5)
-        .forEach(user => {
+    freelancers.forEach(user => {
 
-            table.innerHTML += `
-                <tr>
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.rating.toFixed(1)}</td>
-                </tr>
-            `;
+        table.innerHTML += `
+            <tr>
+                <td>${user.User_ID}</td>
+                <td>${user.User_Name}</td>
+                <td>${user.Skill_Rating}</td>
+            </tr>
+        `;
 
-        });
+    });
 
 }
 
-// ======================================
-// ACTIVE PROJECTS
-// ======================================
-
-function renderProjects() {
+// ===============================
+// Render Projects
+// ===============================
+function renderProjects(projects) {
 
     const table = document.getElementById("projectsTable");
 
     table.innerHTML = "";
 
-    projects
-        .filter(project => project.status === "Active")
-        .forEach(project => {
+    projects.forEach(project => {
 
-            table.innerHTML += `
-                <tr>
-                    <td>${project.id}</td>
-                    <td>${project.title}</td>
-                    <td>₹${project.budget.toLocaleString("en-IN")}</td>
-                </tr>
-            `;
+        table.innerHTML += `
+            <tr>
+                <td>${project.Gig_ID}</td>
+                <td>${project.Project_Title}</td>
+                <td>₹${Number(project.Budget_Amount).toLocaleString("en-IN")}</td>
+            </tr>
+        `;
 
-        });
+    });
 
 }
 
-// ======================================
-// TOTAL CONTRACT BUDGET
-// ======================================
-
-function renderBudget() {
-
-    const total = projects.reduce((sum, project) => {
-
-        return sum + project.budget;
-
-    }, 0);
+// ===============================
+// Render Budget
+// ===============================
+function renderBudget(budget) {
 
     document.getElementById("totalBudget").textContent =
-        "₹" + total.toLocaleString("en-IN");
+        "₹" + Number(budget.Total_Contract_Budget).toLocaleString("en-IN");
 
 }
 
-// ======================================
-// LOAD PAGE
-// ======================================
-
+// ===============================
+// Load Everything
+// ===============================
 document.addEventListener("DOMContentLoaded", () => {
 
-    renderUsers();
-    renderFreelancers();
-    renderProjects();
-    renderBudget();
+    fetchUsers();
+    fetchFreelancers();
+    fetchProjects();
+    fetchBudget();
 
 });

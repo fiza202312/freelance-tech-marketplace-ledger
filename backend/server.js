@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 app.use("/users", usersRoute);
 app.use("/freelancers", freelancersRoute);
 app.use("/projects", projectsRoute);
-// app.use("/budget", budgetRoute);
+app.use("/budget", budgetRoute);
 
 // Server Port
 const PORT = 3000;
