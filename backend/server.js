@@ -24,8 +24,8 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/users", usersRoute);
-// app.use("/freelancers", freelancersRoute);
-// app.use("/projects", projectsRoute);
+app.use("/freelancers", freelancersRoute);
+app.use("/projects", projectsRoute);
 // app.use("/budget", budgetRoute);
 
 // Server Port
