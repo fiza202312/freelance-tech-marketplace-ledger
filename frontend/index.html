@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Tech Marketplace Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Freelance Tech Marketplace Ledger</h1>
+  <p>Manage users, gigs and contracts efficiently.</p>
+</header>
+
+<main>
+
+<section id="dashboard" class="dashboard">
+  <div id="users-card" class="card">
+    <h3>Registered Users</h3>
+    <p>Displays all registered users.</p>
+  </div>
+
+  <div id="freelancers-card" class="card">
+    <h3>High Rated Freelancers</h3>
+    <p>Displays freelancers with high skill ratings.</p>
+  </div>
+
+  <div id="projects-card" class="card">
+    <h3>Active Projects</h3>
+    <p>Displays active project titles.</p>
+  </div>
+
+  <div id="budget-card" class="card">
+    <h3>Total Contract Budget</h3>
+    <p>Calculated using SQL SUM().</p>
+  </div>
+</section>
+
+<section id="users" class="table-section">
+  <h2 id="users-title">Registered Users</h2>
+  <p>Displays all registered users from the database.</p>
+
+  <table id="users-table">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>User Role</th>
+        <th>Skill Rating</th>
+      </tr>
+    </thead>
+    <tbody id="usersTable">
+    </tbody>
+  </table>
+</section>
+
+<section id="freelancers" class="table-section">
+  <h2 id="freelancers-title">High Rated Freelancers</h2>
+  <p>Displays freelancers with ratings above 4.5.</p>
+
+  <table id="freelancers-table">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>Skill Rating</th>
+      </tr>
+    </thead>
+    <tbody id="freelancersTable">
+    </tbody>
+  </table>
+</section>
+
+<section id="projects" class="table-section">
+  <h2 id="projects-title">Active Projects</h2>
+  <p>Displays projects with active contracts.</p>
+
+  <table id="projects-table">
+    <thead>
+      <tr>
+        <th>Gig ID</th>
+        <th>Project Title</th>
+        <th>Budget Amount</th>
+      </tr>
+    </thead>
+    <tbody id="projectsTable">
+    </tbody>
+  </table>
+</section>
+
+<section id="budget" class="budget-section">
+  <h2 id="budget-title">Total Contract Budget</h2>
+  <div class="budget-card">
+    <h1 id="totalBudget">₹0</h1>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2026 Freelance Tech Marketplace Ledger</p>
+  <p>Built with HTML, CSS, JavaScript, Node.js, Express.js and MySQL</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
