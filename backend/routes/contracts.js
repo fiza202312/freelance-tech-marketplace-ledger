@@ -4,14 +4,14 @@ const router = express.Router();
 const db = require("../db");
 
 // ==========================================
-// GET ALL PROJECTS
+// GET ALL CONTRACTS
 // ==========================================
 router.get("/", (req, res) => {
 
     const sql = `
         SELECT *
-        FROM Gigs
-        ORDER BY Gig_ID ASC
+        FROM Contracts
+        ORDER BY Contract_ID ASC
     `;
 
     db.query(sql, (err, results) => {
@@ -34,50 +34,14 @@ router.get("/", (req, res) => {
 });
 
 // ==========================================
-// GET ACTIVE PROJECTS
-// ==========================================
-router.get("/active", (req, res) => {
-
-    const sql = `
-        SELECT
-            Gigs.Gig_ID,
-            Gigs.Project_Title,
-            Gigs.Budget_Amount
-        FROM Gigs
-        INNER JOIN Contracts
-            ON Gigs.Gig_ID = Contracts.Gig_ID
-        WHERE Contracts.Contract_Status = 'Active'
-        ORDER BY Gigs.Gig_ID;
-    `;
-
-    db.query(sql, (err, results) => {
-
-        if (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            count: results.length,
-            data: results
-        });
-
-    });
-
-});
-
-// ==========================================
-// GET SINGLE PROJECT
+// GET SINGLE CONTRACT
 // ==========================================
 router.get("/:id", (req, res) => {
 
     const sql = `
         SELECT *
-        FROM Gigs
-        WHERE Gig_ID = ?
+        FROM Contracts
+        WHERE Contract_ID = ?
     `;
 
     db.query(sql, [req.params.id], (err, results) => {
@@ -92,7 +56,7 @@ router.get("/:id", (req, res) => {
         if (results.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Project not found"
+                message: "Contract not found"
             });
         }
 
@@ -106,22 +70,22 @@ router.get("/:id", (req, res) => {
 });
 
 // ==========================================
-// CREATE PROJECT
+// CREATE CONTRACT
 // ==========================================
 router.post("/", (req, res) => {
 
     const {
-        Client_ID,
-        Project_Title,
-        Budget_Amount
+        Gig_ID,
+        Freelancer_ID,
+        Contract_Status
     } = req.body;
 
     const sql = `
-        INSERT INTO Gigs
+        INSERT INTO Contracts
         (
-            Client_ID,
-            Project_Title,
-            Budget_Amount
+            Gig_ID,
+            Freelancer_ID,
+            Contract_Status
         )
         VALUES
         (?, ?, ?)
@@ -130,9 +94,9 @@ router.post("/", (req, res) => {
     db.query(
         sql,
         [
-            Client_ID,
-            Project_Title,
-            Budget_Amount
+            Gig_ID,
+            Freelancer_ID,
+            Contract_Status
         ],
         (err, result) => {
 
@@ -145,7 +109,7 @@ router.post("/", (req, res) => {
 
             res.status(201).json({
                 success: true,
-                message: "Project created successfully",
+                message: "Contract created successfully",
                 id: result.insertId
             });
 
@@ -155,31 +119,31 @@ router.post("/", (req, res) => {
 });
 
 // ==========================================
-// UPDATE PROJECT
+// UPDATE CONTRACT
 // ==========================================
 router.put("/:id", (req, res) => {
 
     const {
-        Client_ID,
-        Project_Title,
-        Budget_Amount
+        Gig_ID,
+        Freelancer_ID,
+        Contract_Status
     } = req.body;
 
     const sql = `
-        UPDATE Gigs
+        UPDATE Contracts
         SET
-            Client_ID = ?,
-            Project_Title = ?,
-            Budget_Amount = ?
-        WHERE Gig_ID = ?
+            Gig_ID = ?,
+            Freelancer_ID = ?,
+            Contract_Status = ?
+        WHERE Contract_ID = ?
     `;
 
     db.query(
         sql,
         [
-            Client_ID,
-            Project_Title,
-            Budget_Amount,
+            Gig_ID,
+            Freelancer_ID,
+            Contract_Status,
             req.params.id
         ],
         (err) => {
@@ -193,7 +157,7 @@ router.put("/:id", (req, res) => {
 
             res.status(200).json({
                 success: true,
-                message: "Project updated successfully"
+                message: "Contract updated successfully"
             });
 
         }
@@ -202,14 +166,14 @@ router.put("/:id", (req, res) => {
 });
 
 // ==========================================
-// DELETE PROJECT
+// DELETE CONTRACT
 // ==========================================
 router.delete("/:id", (req, res) => {
 
     const sql = `
         DELETE
-        FROM Gigs
-        WHERE Gig_ID = ?
+        FROM Contracts
+        WHERE Contract_ID = ?
     `;
 
     db.query(sql, [req.params.id], (err) => {
@@ -223,7 +187,7 @@ router.delete("/:id", (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Project deleted successfully"
+            message: "Contract deleted successfully"
         });
 
     });

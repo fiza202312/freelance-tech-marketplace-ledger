@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,102 +10,410 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header>
-  <h1>Freelance Tech Marketplace Ledger</h1>
-  <p>Manage users, gigs and contracts efficiently.</p>
-</header>
+  <header>
 
-<main>
+    <div class="header-content">
 
-<section id="dashboard" class="dashboard">
-  <div id="users-card" class="card">
+      <div>
+
+        <h1>Freelance Tech Marketplace Ledger</h1>
+        <p>Database Management System Project</p>
+
+      </div>
+
+      <nav>
+
+        <button class="nav-btn active" data-page="dashboard">
+          Dashboard
+        </button>
+
+        <button class="nav-btn" data-page="users">
+          Users
+        </button>
+
+        <button class="nav-btn" data-page="gigs">
+          Gigs
+        </button>
+
+        <button class="nav-btn" data-page="contracts">
+          Contracts
+        </button>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+  <main>
+
+    <!-- ===========================
+         DASHBOARD PAGE
+    ============================ -->
+    <section id="dashboard" class="page active">
+
+        <section class="dashboard">
+
+            <div id="users-card" class="card">
+
     <h3>Registered Users</h3>
-    <p>Displays all registered users.</p>
-  </div>
 
-  <div id="freelancers-card" class="card">
+    <h1 id="usersCount">0</h1>
+
+</div>
+            <div id="freelancers-card" class="card">
+
     <h3>High Rated Freelancers</h3>
-    <p>Displays freelancers with high skill ratings.</p>
-  </div>
 
-  <div id="projects-card" class="card">
+    <h1 id="freelancersCount">0</h1>
+
+</div>
+
+            <div id="projects-card" class="card">
+
     <h3>Active Projects</h3>
-    <p>Displays active project titles.</p>
-  </div>
 
-  <div id="budget-card" class="card">
+    <h1 id="projectsCount">0</h1>
+
+</div>
+
+            <div id="budget-card" class="card">
+
     <h3>Total Contract Budget</h3>
-    <p>Calculated using SQL SUM().</p>
-  </div>
+
+    <h1 id="dashboardBudget">₹0</h1>
+
+</div>
+
+        </section>
+
+        <!-- Registered Users -->
+        <section class="table-section">
+
+            <h2>Registered Users</h2>
+
+            <p>Displays all registered users from the database.</p>
+
+            <table id="users-table">
+
+                <thead>
+
+                    <tr>
+                        <th>User ID</th>
+                        <th>User Name</th>
+                        <th>User Role</th>
+                        <th>Skill Rating</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="usersTable"></tbody>
+
+            </table>
+
+        </section>
+
+        <!-- High Rated Freelancers -->
+        <section class="table-section">
+
+            <h2>High Rated Freelancers</h2>
+
+            <p>Displays freelancers with ratings above 4.5.</p>
+
+            <table id="freelancers-table">
+
+                <thead>
+
+                    <tr>
+                        <th>User ID</th>
+                        <th>User Name</th>
+                        <th>Skill Rating</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="freelancersTable"></tbody>
+
+            </table>
+
+        </section>
+
+        <!-- Active Projects -->
+        <section class="table-section">
+
+            <h2>Active Projects</h2>
+
+            <p>Displays projects with active contracts.</p>
+
+            <table id="projects-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Gig ID</th>
+                        <th>Project Title</th>
+                        <th>Budget Amount</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="projectsTable"></tbody>
+
+            </table>
+
+        </section>
+
+        <!-- Budget -->
+        <section class="budget-section">
+
+            <h2>Total Contract Budget</h2>
+
+            <div class="budget-card">
+
+                <h1 id="totalBudget">₹0</h1>
+
+            </div>
+
+        </section>
+
+    </section>
+
+    <!-- ===========================
+         USERS PAGE
+    ============================ -->
+    <section id="users" class="page">
+
+        <div class="table-section">
+
+            <h2>Manage Users</h2>
+
+            <p>Add, edit, update and delete users.</p>
+
+            <form id="userForm">
+
+                <input type="hidden" id="userId">
+
+                <input
+                    type="text"
+                    id="userName"
+                    placeholder="User Name"
+                    required>
+
+                <select id="userRole">
+
+                    <option value="Freelancer">Freelancer</option>
+                    <option value="Client">Client</option>
+
+                </select>
+
+                <input
+                    type="number"
+                    id="userRating"
+                    placeholder="Skill Rating"
+                    step="0.1"
+                    required>
+
+                <button
+                    type="submit"
+                    id="saveUserBtn">
+
+                    Add User
+
+                </button>
+<button
+    type="button"
+    id="cancelEditBtn"
+    style="display:none;">
+
+    Cancel
+
+</button>
+            </form>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Rating</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="usersCrudTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- ===========================
+     GIGS PAGE
+============================ -->
+<section id="gigs" class="page">
+
+    <div class="table-section">
+
+        <h2>Manage Gigs</h2>
+
+        <p>Add, edit, update and delete gigs.</p>
+
+        <form id="gigForm">
+
+            <input type="hidden" id="gigId">
+
+            <input
+                type="number"
+                id="clientId"
+                placeholder="Client ID"
+                required>
+
+            <input
+                type="text"
+                id="projectTitle"
+                placeholder="Project Title"
+                required>
+
+            <input
+                type="number"
+                id="budgetAmount"
+                placeholder="Budget Amount"
+                required>
+
+            <button
+                type="submit"
+                id="saveGigBtn">
+
+                Add Gig
+
+            </button>
+<button
+    type="button"
+    id="cancelGigEditBtn"
+    style="display:none;">
+
+    Cancel
+
+</button>
+        </form>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Client ID</th>
+                    <th>Project Title</th>
+                    <th>Budget</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="gigsCrudTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
 </section>
 
-<section id="users" class="table-section">
-  <h2 id="users-title">Registered Users</h2>
-  <p>Displays all registered users from the database.</p>
+   <!-- ===========================
+     CONTRACTS PAGE
+============================ -->
+<section id="contracts" class="page">
 
-  <table id="users-table">
-    <thead>
-      <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>User Role</th>
-        <th>Skill Rating</th>
-      </tr>
-    </thead>
-    <tbody id="usersTable">
-    </tbody>
-  </table>
+    <div class="table-section">
+
+        <h2>Manage Contracts</h2>
+
+        <p>Add, edit, update and delete contracts.</p>
+
+        <form id="contractForm">
+
+            <input type="hidden" id="contractId">
+
+           <input
+    type="number"
+    id="contractGigId"
+    placeholder="Gig ID"
+    required>
+
+            <input
+                type="number"
+                id="freelancerId"
+                placeholder="Freelancer ID"
+                required>
+
+            <select id="contractStatus">
+
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+
+            </select>
+
+            <button
+                type="submit"
+                id="saveContractBtn">
+
+                Add Contract
+
+            </button>
+<button
+    type="button"
+    id="cancelContractEditBtn"
+    style="display:none;">
+
+    Cancel
+
+</button>
+        </form>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Gig</th>
+                    <th>Freelancer</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="contractsCrudTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
 </section>
-
-<section id="freelancers" class="table-section">
-  <h2 id="freelancers-title">High Rated Freelancers</h2>
-  <p>Displays freelancers with ratings above 4.5.</p>
-
-  <table id="freelancers-table">
-    <thead>
-      <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>Skill Rating</th>
-      </tr>
-    </thead>
-    <tbody id="freelancersTable">
-    </tbody>
-  </table>
-</section>
-
-<section id="projects" class="table-section">
-  <h2 id="projects-title">Active Projects</h2>
-  <p>Displays projects with active contracts.</p>
-
-  <table id="projects-table">
-    <thead>
-      <tr>
-        <th>Gig ID</th>
-        <th>Project Title</th>
-        <th>Budget Amount</th>
-      </tr>
-    </thead>
-    <tbody id="projectsTable">
-    </tbody>
-  </table>
-</section>
-
-<section id="budget" class="budget-section">
-  <h2 id="budget-title">Total Contract Budget</h2>
-  <div class="budget-card">
-    <h1 id="totalBudget">₹0</h1>
-  </div>
-</section>
-
 </main>
 
-<footer>
-  <p>© 2026 Freelance Tech Marketplace Ledger</p>
-</footer>
+  <footer>
+    <p>© 2026 Freelance Tech Marketplace Ledger</p>
+  </footer>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>

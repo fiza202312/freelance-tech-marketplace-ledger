@@ -9,7 +9,7 @@ const usersRoute = require("./routes/users");
 const freelancersRoute = require("./routes/freelancers");
 const projectsRoute = require("./routes/projects");
 const budgetRoute = require("./routes/budget");
-
+const contractsRoute = require("./routes/contracts");
 // Initialize Express
 const app = express();
 
@@ -27,6 +27,7 @@ app.use("/users", usersRoute);
 app.use("/freelancers", freelancersRoute);
 app.use("/projects", projectsRoute);
 app.use("/budget", budgetRoute);
+app.use("/contracts", contractsRoute);
 
 // Server Port
 const PORT = 3000;
