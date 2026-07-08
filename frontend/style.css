@@ -1,89 +1,472 @@
-body {
-    font-family: Inter, sans-serif;
-    background: #f4f7fb;
-    margin: 0
+/* ===============================
+   RESET
+=============================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-header {
-    background: #2563eb;
-    color: #fff;
-    padding: 24px
+body{
+
+    font-family:Inter,sans-serif;
+    background:#f1f5f9;
+    color:#1e293b;
+
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap
+/* ===============================
+   HEADER
+=============================== */
+
+header{
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    color:white;
+
+    padding:25px 40px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
 }
 
-nav {
-    display: flex;
-    gap: 10px
+.header-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
 }
 
-.nav-btn {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    background: #1e3a8a;
-    color: #fff;
-    cursor: pointer
+header h1{
+
+    font-size:30px;
+
+    font-weight:700;
+
 }
 
-.nav-btn.active {
-    background: #0f172a
+header p{
+
+    margin-top:6px;
+
+    opacity:.85;
+
 }
 
-main {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 16px
+/* ===============================
+   NAVIGATION
+=============================== */
+
+nav{
+
+    display:flex;
+
+    gap:12px;
+
 }
 
-.page {
-    display: none
+.nav-btn{
+
+    border:none;
+
+    background:rgba(255,255,255,.15);
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-weight:600;
+
 }
 
-.page.active {
-    display: block
+.nav-btn:hover{
+
+    background:white;
+
+    color:#2563eb;
+
 }
 
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px
+.nav-btn.active{
+
+    background:white;
+
+    color:#2563eb;
+
 }
 
-.card,
-.table-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
-    margin-bottom: 24px
+/* ===============================
+   MAIN
+=============================== */
+
+main{
+
+    width:min(1200px,95%);
+
+    margin:40px auto;
+
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse
+/* ===============================
+   PAGE
+=============================== */
+
+.page{
+
+    display:none;
+
 }
 
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 10px
+.page.active{
+
+    display:block;
+
 }
 
-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px
+/* ===============================
+   DASHBOARD
+=============================== */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:24px;
+
+    margin-bottom:35px;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 18px 35px rgba(0,0,0,.15);
+
+}
+
+.card h3{
+
+    color:#64748b;
+
+    margin-bottom:15px;
+
+    font-size:16px;
+
+}
+
+.card h1{
+
+    font-size:42px;
+
+    color:#2563eb;
+
+}
+
+/* ===============================
+   TABLE SECTION
+=============================== */
+
+.table-section,
+.budget-section{
+
+    background:white;
+
+    padding:28px;
+
+    border-radius:18px;
+
+    margin-top:28px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+}
+
+.table-section h2{
+
+    margin-bottom:8px;
+
+}
+
+.table-section p{
+
+    color:#64748b;
+
+    margin-bottom:25px;
+
+}
+
+/* ===============================
+   TABLE
+=============================== */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    overflow:hidden;
+
+    border-radius:12px;
+
+}
+
+thead{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+th{
+
+    padding:15px;
+
+    text-align:left;
+
+}
+
+td{
+
+    padding:14px;
+
+    border-bottom:1px solid #e2e8f0;
+
+}
+
+tbody tr:nth-child(even){
+
+    background:#f8fafc;
+
+}
+
+tbody tr:hover{
+
+    background:#eff6ff;
+
+}
+
+/* ===============================
+   FORM
+=============================== */
+
+form{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:15px;
+
+    margin-bottom:30px;
+
 }
 
 input,
-select,
-button {
-    padding: 10px
+select{
+
+    padding:13px;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:10px;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+input:focus,
+select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.2);
+
+}
+
+/* ===============================
+   BUTTONS
+=============================== */
+
+button{
+
+    border:none;
+
+    padding:13px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+#saveUserBtn,
+#saveGigBtn,
+#saveContractBtn{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+#saveUserBtn:hover,
+#saveGigBtn:hover,
+#saveContractBtn:hover{
+
+    background:#15803d;
+
+}
+
+#cancelEditBtn,
+#cancelGigEditBtn,
+#cancelContractEditBtn{
+
+    background:#64748b;
+
+    color:white;
+
+}
+
+#cancelEditBtn:hover,
+#cancelGigEditBtn:hover,
+#cancelContractEditBtn:hover{
+
+    background:#475569;
+
+}
+
+table button{
+
+    margin-right:8px;
+
+    padding:8px 14px;
+
+}
+
+table button:first-child{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+table button:last-child{
+
+    background:#dc2626;
+
+    color:white;
+
+}
+
+table button:hover{
+
+    opacity:.9;
+
+}
+
+/* ===============================
+   BUDGET
+=============================== */
+
+.budget-card{
+
+    background:#2563eb;
+
+    color:white;
+
+    border-radius:15px;
+
+    padding:40px;
+
+    text-align:center;
+
+}
+
+.budget-card h1{
+
+    font-size:48px;
+
+}
+
+/* ===============================
+   FOOTER
+=============================== */
+
+footer{
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#64748b;
+
+}
+
+/* ===============================
+   MOBILE
+=============================== */
+
+@media(max-width:768px){
+
+.header-content{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+nav{
+
+    flex-wrap:wrap;
+
+}
+
+.card h1{
+
+    font-size:34px;
+
+}
+
 }
