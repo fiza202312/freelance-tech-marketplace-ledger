@@ -1,9 +1,15 @@
-// ==============================
-// Navigation
-// ==============================
+// ==========================================
+// API
+// ==========================================
+
+const API_BASE_URL = "http://localhost:3000";
+
+
+// ==========================================
+// NAVIGATION
+// ==========================================
 
 const navButtons = document.querySelectorAll(".nav-btn");
-
 const pages = document.querySelectorAll(".page");
 
 navButtons.forEach(button => {
@@ -11,7 +17,6 @@ navButtons.forEach(button => {
     button.addEventListener("click", () => {
 
         navButtons.forEach(btn => btn.classList.remove("active"));
-
         pages.forEach(page => page.classList.remove("active"));
 
         button.classList.add("active");
@@ -23,84 +28,191 @@ navButtons.forEach(button => {
     });
 
 });
-const API_BASE_URL = "http://localhost:3000";
 
-// ======================================
+
+// ==========================================
+// DASHBOARD
+// ==========================================
+
+async function loadDashboard() {
+
+    try {
+
+        const [
+            usersResponse,
+            freelancersResponse,
+            projectsResponse,
+            budgetResponse
+
+        ] = await Promise.all([
+
+            fetch(`${API_BASE_URL}/users`),
+            fetch(`${API_BASE_URL}/freelancers`),
+            fetch(`${API_BASE_URL}/projects/active`),
+            fetch(`${API_BASE_URL}/budget`)
+
+        ]);
+
+        const users = await usersResponse.json();
+        const freelancers = await freelancersResponse.json();
+        const projects = await projectsResponse.json();
+        const budget = await budgetResponse.json();
+
+        renderUsers(users.data);
+
+        renderFreelancers(freelancers.data);
+
+        renderProjects(projects.data);
+
+        renderBudget(budget.data);
+
+        document.getElementById("usersCount").textContent =
+            users.data.length;
+
+        document.getElementById("freelancersCount").textContent =
+            freelancers.data.length;
+
+        document.getElementById("projectsCount").textContent =
+            projects.data.length;
+
+        document.getElementById("dashboardBudget").textContent =
+            "₹" +
+            Number(
+                budget.data.Total_Contract_Budget
+            ).toLocaleString("en-IN");
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+// ==========================================
+// DASHBOARD TABLES
+// ==========================================
+
+function renderUsers(users){
+
+    const table =
+        document.getElementById("usersTable");
+
+    table.innerHTML = "";
+
+    users.forEach(user=>{
+
+        table.innerHTML +=`
+
+        <tr>
+
+            <td>${user.User_ID}</td>
+
+            <td>${user.User_Name}</td>
+
+            <td>${user.User_Role}</td>
+
+            <td>${user.Skill_Rating}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function renderFreelancers(users){
+
+    const table =
+        document.getElementById("freelancersTable");
+
+    table.innerHTML="";
+
+    users.forEach(user=>{
+
+        table.innerHTML+=`
+
+        <tr>
+
+            <td>${user.User_ID}</td>
+
+            <td>${user.User_Name}</td>
+
+            <td>${user.Skill_Rating}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function renderProjects(projects){
+
+    const table =
+        document.getElementById("projectsTable");
+
+    table.innerHTML="";
+
+    projects.forEach(project=>{
+
+        table.innerHTML+=`
+
+        <tr>
+
+            <td>${project.Gig_ID}</td>
+
+            <td>${project.Project_Title}</td>
+
+            <td>₹${Number(project.Budget_Amount).toLocaleString("en-IN")}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function renderBudget(budget){
+
+    document.getElementById("totalBudget").textContent =
+        "₹" +
+        Number(
+            budget.Total_Contract_Budget
+        ).toLocaleString("en-IN");
+
+}
+// ==========================================
 // USERS CRUD VARIABLES
-// ======================================
+// ==========================================
 
 let editingUser = false;
 
 const userForm = document.getElementById("userForm");
+
 const userId = document.getElementById("userId");
+
 const userName = document.getElementById("userName");
+
 const userRole = document.getElementById("userRole");
+
 const userRating = document.getElementById("userRating");
+
+const saveUserBtn = document.getElementById("saveUserBtn");
+
+const cancelEditBtn = document.getElementById("cancelEditBtn");
 
 const usersCrudTable = document.getElementById("usersCrudTable");
 
-const saveUserBtn = document.getElementById("saveUserBtn");
-const cancelEditBtn = document.getElementById("cancelEditBtn");
-
-// ======================================
-// PROJECT CRUD VARIABLES
-// ======================================
-
-let editingProject = false;
-
-const gigForm = document.getElementById("gigForm");
-
-const gigId = document.getElementById("gigId");
-
-const clientId = document.getElementById("clientId");
-
-const projectTitle = document.getElementById("projectTitle");
-
-const budgetAmount = document.getElementById("budgetAmount");
-
-const saveGigBtn = document.getElementById("saveGigBtn");
-
-const cancelGigEditBtn = document.getElementById("cancelGigEditBtn");
-
-// ======================================
-// CONTRACT CRUD VARIABLES
-// ======================================
-
-let editingContract = false;
-
-const contractForm = document.getElementById("contractForm");
-
-const contractId = document.getElementById("contractId");
-
-const contractGigId = document.getElementById("contractGigId");
-
-const freelancerId = document.getElementById("freelancerId");
-
-const contractStatus = document.getElementById("contractStatus");
-
-const saveContractBtn = document.getElementById("saveContractBtn");
-
-const cancelContractEditBtn = document.getElementById("cancelContractEditBtn");
-
-const contractsCrudTable = document.getElementById("contractsCrudTable");
-
-// ===============================
-// Fetch All Users
-// ===============================
-async function fetchUsers() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/users`);
-        const result = await response.json();
-
-        renderUsers(result.data);
-
-    } catch (error) {
-        console.error("Error fetching users:", error);
-    }
-}
-// ======================================
-// LOAD USERS FOR CRUD PAGE
-// ======================================
+// ==========================================
+// LOAD USERS CRUD
+// ==========================================
 
 async function loadUsersCRUD() {
 
@@ -122,82 +234,9 @@ async function loadUsersCRUD() {
 
 }
 
-// ===============================
-// Fetch High Rated Freelancers
-// ===============================
-async function fetchFreelancers() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/freelancers`);
-        const result = await response.json();
-
-        renderFreelancers(result.data);
-
-    } catch (error) {
-        console.error("Error fetching freelancers:", error);
-    }
-}
-
-// ===============================
-// Fetch Active Projects
-// ===============================
-async function fetchProjects() {
-
-    try {
-
-        const response = await fetch(`${API_BASE_URL}/projects/active`);
-
-        const result = await response.json();
-
-        renderProjects(result.data);
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-    }
-
-}
-
-// ===============================
-// Fetch Budget
-// ===============================
-async function fetchBudget() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/budget`);
-        const result = await response.json();
-
-        renderBudget(result.data);
-
-    } catch (error) {
-        console.error("Error fetching budget:", error);
-    }
-}
-
-// ===============================
-// Render Users
-// ===============================
-// ======================================
-// CANCEL CONTRACT EDIT
-// ======================================
-
-cancelContractEditBtn.addEventListener("click", () => {
-
-    editingContract = false;
-
-    contractForm.reset();
-
-    contractId.value = "";
-
-    saveContractBtn.textContent = "Add Contract";
-
-    cancelContractEditBtn.style.display = "none";
-
-});
-// ======================================
+// ==========================================
 // RENDER USERS CRUD
-// ======================================
+// ==========================================
 
 function renderUsersCRUD(users) {
 
@@ -241,9 +280,9 @@ function renderUsersCRUD(users) {
 
 }
 
-// ======================================
+// ==========================================
 // EDIT USER
-// ======================================
+// ==========================================
 
 async function editUser(id) {
 
@@ -271,7 +310,7 @@ async function editUser(id) {
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
@@ -279,9 +318,9 @@ async function editUser(id) {
 
 }
 
-// ======================================
+// ==========================================
 // CANCEL EDIT
-// ======================================
+// ==========================================
 
 cancelEditBtn.addEventListener("click", () => {
 
@@ -297,15 +336,17 @@ cancelEditBtn.addEventListener("click", () => {
 
 });
 
-// ======================================
+// ==========================================
 // DELETE USER
-// ======================================
+// ==========================================
 
 async function deleteUser(id) {
 
-    const confirmDelete = confirm("Are you sure you want to delete this user?");
+    if (!confirm("Are you sure you want to delete this user?")) {
 
-    if (!confirmDelete) return;
+        return;
+
+    }
 
     try {
 
@@ -315,13 +356,13 @@ async function deleteUser(id) {
 
         });
 
-        loadUsersCRUD();
+        await loadUsersCRUD();
 
-        fetchUsers();
+        await loadDashboard();
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
@@ -329,11 +370,11 @@ async function deleteUser(id) {
 
 }
 
-// ======================================
+// ==========================================
 // ADD / UPDATE USER
-// ======================================
+// ==========================================
 
-userForm.addEventListener("submit", async function (e) {
+userForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
@@ -349,53 +390,55 @@ userForm.addEventListener("submit", async function (e) {
 
     try {
 
-        if (!editingUser) {
+        if(editingUser){
 
-            await fetch(`${API_BASE_URL}/users`, {
+            await fetch(`${API_BASE_URL}/users/${userId.value}`,{
 
-                method: "POST",
+                method:"PUT",
 
-                headers: {
-                    "Content-Type": "application/json"
+                headers:{
+                    "Content-Type":"application/json"
                 },
 
-                body: JSON.stringify(user)
+                body:JSON.stringify(user)
 
             });
 
         }
 
-        else {
+        else{
 
-            await fetch(`${API_BASE_URL}/users/${userId.value}`, {
+            await fetch(`${API_BASE_URL}/users`,{
 
-                method: "PUT",
+                method:"POST",
 
-                headers: {
-                    "Content-Type": "application/json"
+                headers:{
+                    "Content-Type":"application/json"
                 },
 
-                body: JSON.stringify(user)
+                body:JSON.stringify(user)
 
             });
 
-            editingUser = false;
-
-            saveUserBtn.textContent = "Add User";
-
-            cancelEditBtn.style.display = "none";
-
         }
+
+        editingUser = false;
 
         userForm.reset();
 
-        loadUsersCRUD();
+        userId.value = "";
 
-        fetchUsers();
+        saveUserBtn.textContent = "Add User";
+
+        cancelEditBtn.style.display = "none";
+
+        await loadUsersCRUD();
+
+        await loadDashboard();
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
@@ -403,67 +446,33 @@ userForm.addEventListener("submit", async function (e) {
 
 });
 
-// ===============================
-// Render Freelancers
-// ===============================
-function renderFreelancers(freelancers) {
+// ==========================================
+// GIGS CRUD VARIABLES
+// ==========================================
 
-    const table = document.getElementById("freelancersTable");
+let editingGig = false;
 
-    table.innerHTML = "";
+const gigForm = document.getElementById("gigForm");
 
-    freelancers.forEach(user => {
+const gigId = document.getElementById("gigId");
 
-        table.innerHTML += `
-            <tr>
-                <td>${user.User_ID}</td>
-                <td>${user.User_Name}</td>
-                <td>${user.Skill_Rating}</td>
-            </tr>
-        `;
+const clientId = document.getElementById("clientId");
 
-    });
+const projectTitle = document.getElementById("projectTitle");
 
-}
+const budgetAmount = document.getElementById("budgetAmount");
 
-// ===============================
-// Render Projects
-// ===============================
-function renderProjects(projects) {
+const saveGigBtn = document.getElementById("saveGigBtn");
 
-    const table = document.getElementById("projectsTable");
+const cancelGigEditBtn = document.getElementById("cancelGigEditBtn");
 
-    table.innerHTML = "";
+const gigsCrudTable = document.getElementById("gigsCrudTable");
 
-    projects.forEach(project => {
+// ==========================================
+// LOAD GIGS CRUD
+// ==========================================
 
-        table.innerHTML += `
-            <tr>
-                <td>${project.Gig_ID}</td>
-                <td>${project.Project_Title}</td>
-                <td>₹${Number(project.Budget_Amount).toLocaleString("en-IN")}</td>
-            </tr>
-        `;
-
-    });
-
-}
-
-// ===============================
-// Render Budget
-// ===============================
-function renderBudget(budget) {
-
-    document.getElementById("totalBudget").textContent =
-        "₹" + Number(budget.Total_Contract_Budget).toLocaleString("en-IN");
-
-}
-
-// ======================================
-// LOAD PROJECTS CRUD TABLE
-// ======================================
-
-async function loadProjectsCRUD() {
+async function loadGigsCRUD() {
 
     try {
 
@@ -471,36 +480,7 @@ async function loadProjectsCRUD() {
 
         const result = await response.json();
 
-        const table = document.getElementById("gigsCrudTable");
-
-        table.innerHTML = "";
-
-        result.data.forEach(project => {
-
-            table.innerHTML += `
-                <tr>
-                    <td>${project.Gig_ID}</td>
-                    <td>${project.Client_ID}</td>
-                    <td>${project.Project_Title}</td>
-                    <td>₹${Number(project.Budget_Amount).toLocaleString("en-IN")}</td>
-
-                    <td>
-                       <button onclick="editProject(${project.Gig_ID})">
-
-    Edit
-
-</button>
-
-<button onclick="deleteProject(${project.Gig_ID})">
-
-    Delete
-
-</button>
-                    </td>
-                </tr>
-            `;
-
-        });
+        renderGigsCRUD(result.data);
 
     }
 
@@ -512,9 +492,243 @@ async function loadProjectsCRUD() {
 
 }
 
-// ======================================
-// LOAD CONTRACTS CRUD TABLE
-// ======================================
+// ==========================================
+// RENDER GIGS CRUD
+// ==========================================
+
+function renderGigsCRUD(gigs){
+
+    gigsCrudTable.innerHTML = "";
+
+    gigs.forEach(gig=>{
+
+        gigsCrudTable.innerHTML += `
+
+        <tr>
+
+            <td>${gig.Gig_ID}</td>
+
+            <td>${gig.Client_ID}</td>
+
+            <td>${gig.Project_Title}</td>
+
+            <td>₹${Number(gig.Budget_Amount).toLocaleString("en-IN")}</td>
+
+            <td>
+
+                <button onclick="editGig(${gig.Gig_ID})">
+
+                    Edit
+
+                </button>
+
+                <button onclick="deleteGig(${gig.Gig_ID})">
+
+                    Delete
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+// ==========================================
+// EDIT GIG
+// ==========================================
+
+async function editGig(id){
+
+    try{
+
+        const response = await fetch(`${API_BASE_URL}/projects/${id}`);
+
+        const result = await response.json();
+
+        const gig = result.data;
+
+        gigId.value = gig.Gig_ID;
+
+        clientId.value = gig.Client_ID;
+
+        projectTitle.value = gig.Project_Title;
+
+        budgetAmount.value = gig.Budget_Amount;
+
+        editingGig = true;
+
+        saveGigBtn.textContent = "Update Gig";
+
+        cancelGigEditBtn.style.display = "inline-block";
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+// ==========================================
+// CANCEL GIG EDIT
+// ==========================================
+
+cancelGigEditBtn.addEventListener("click", () => {
+
+    editingGig = false;
+
+    gigForm.reset();
+
+    gigId.value = "";
+
+    saveGigBtn.textContent = "Add Gig";
+
+    cancelGigEditBtn.style.display = "none";
+
+});
+
+// ==========================================
+// DELETE GIG
+// ==========================================
+
+async function deleteGig(id) {
+
+    if (!confirm("Are you sure you want to delete this gig?")) {
+
+        return;
+
+    }
+
+    try {
+
+        await fetch(`${API_BASE_URL}/projects/${id}`, {
+
+            method: "DELETE"
+
+        });
+
+        await loadGigsCRUD();
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+// ==========================================
+// ADD / UPDATE GIG
+// ==========================================
+
+gigForm.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const gig = {
+
+        Client_ID: clientId.value,
+
+        Project_Title: projectTitle.value,
+
+        Budget_Amount: budgetAmount.value
+
+    };
+
+    try {
+
+        if (editingGig) {
+
+            await fetch(`${API_BASE_URL}/projects/${gigId.value}`, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(gig)
+
+            });
+
+        }
+
+        else {
+
+            await fetch(`${API_BASE_URL}/projects`, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(gig)
+
+            });
+
+        }
+
+        editingGig = false;
+
+        gigForm.reset();
+
+        gigId.value = "";
+
+        saveGigBtn.textContent = "Add Gig";
+
+        cancelGigEditBtn.style.display = "none";
+
+        await loadGigsCRUD();
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+});
+
+// ==========================================
+// CONTRACT CRUD VARIABLES
+// ==========================================
+
+let editingContract = false;
+
+const contractForm = document.getElementById("contractForm");
+
+const contractId = document.getElementById("contractId");
+
+const contractGigId = document.getElementById("contractGigId");
+
+const freelancerId = document.getElementById("freelancerId");
+
+const contractStatus = document.getElementById("contractStatus");
+
+const saveContractBtn = document.getElementById("saveContractBtn");
+
+const cancelContractEditBtn = document.getElementById("cancelContractEditBtn");
+
+const contractsCrudTable = document.getElementById("contractsCrudTable");
+
+// ==========================================
+// LOAD CONTRACTS CRUD
+// ==========================================
 
 async function loadContractsCRUD() {
 
@@ -528,7 +742,7 @@ async function loadContractsCRUD() {
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
@@ -536,45 +750,41 @@ async function loadContractsCRUD() {
 
 }
 
-// ======================================
+// ==========================================
 // RENDER CONTRACTS CRUD
-// ======================================
+// ==========================================
 
-function renderContractsCRUD(contracts) {
+function renderContractsCRUD(contracts){
 
     contractsCrudTable.innerHTML = "";
 
-    contracts.forEach(contract => {
+    contracts.forEach(contract=>{
 
         contractsCrudTable.innerHTML += `
 
-            <tr>
+        <tr>
 
-                <td>${contract.Contract_ID}</td>
+            <td>${contract.Contract_ID}</td>
 
-                <td>${contract.Gig_ID}</td>
+            <td>${contract.Gig_ID}</td>
 
-                <td>${contract.Freelancer_ID}</td>
+            <td>${contract.Freelancer_ID}</td>
 
-                <td>${contract.Contract_Status}</td>
+            <td>${contract.Contract_Status}</td>
 
-                <td>
+            <td>
 
-                    <button onclick="editContract(${contract.Contract_ID})">
+                <button onclick="editContract(${contract.Contract_ID})">
+                    Edit
+                </button>
 
-                        Edit
+                <button onclick="deleteContract(${contract.Contract_ID})">
+                    Delete
+                </button>
 
-                    </button>
+            </td>
 
-                    <button onclick="deleteContract(${contract.Contract_ID})">
-
-                        Delete
-
-                    </button>
-
-                </td>
-
-            </tr>
+        </tr>
 
         `;
 
@@ -582,13 +792,13 @@ function renderContractsCRUD(contracts) {
 
 }
 
-// ======================================
+// ==========================================
 // EDIT CONTRACT
-// ======================================
+// ==========================================
 
-async function editContract(id) {
+async function editContract(id){
 
-    try {
+    try{
 
         const response = await fetch(`${API_BASE_URL}/contracts/${id}`);
 
@@ -612,7 +822,7 @@ async function editContract(id) {
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
@@ -620,45 +830,11 @@ async function editContract(id) {
 
 }
 
-// ======================================
-// DELETE CONTRACT
-// ======================================
-
-async function deleteContract(id) {
-
-    const confirmDelete = confirm("Are you sure you want to delete this contract?");
-
-    if (!confirmDelete) return;
-
-    try {
-
-        await fetch(`${API_BASE_URL}/contracts/${id}`, {
-
-            method: "DELETE"
-
-        });
-
-        loadContractsCRUD();
-
-        fetchProjects();
-
-        fetchBudget();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-}
-
-// ======================================
+// ==========================================
 // CANCEL CONTRACT EDIT
-// ======================================
+// ==========================================
 
-cancelContractEditBtn.addEventListener("click", () => {
+cancelContractEditBtn.addEventListener("click",()=>{
 
     editingContract = false;
 
@@ -672,109 +848,25 @@ cancelContractEditBtn.addEventListener("click", () => {
 
 });
 
-// ======================================
-// ADD / UPDATE CONTRACT
-// ======================================
+// ==========================================
+// DELETE CONTRACT
+// ==========================================
 
-contractForm.addEventListener("submit", async function (e) {
+async function deleteContract(id){
 
-    e.preventDefault();
+    if(!confirm("Are you sure?")) return;
 
-    const contract = {
+    try{
 
-        Gig_ID: contractGigId.value,
+        await fetch(`${API_BASE_URL}/contracts/${id}`,{
 
-        Freelancer_ID: freelancerId.value,
+            method:"DELETE"
 
-        Contract_Status: contractStatus.value
+        });
 
-    };
+        await loadContractsCRUD();
 
-    try {
-
-        if (!editingContract) {
-
-            await fetch(`${API_BASE_URL}/contracts`, {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(contract)
-
-            });
-
-        }
-
-        else {
-
-            await fetch(`${API_BASE_URL}/contracts/${contractId.value}`, {
-
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(contract)
-
-            });
-
-            editingContract = false;
-
-            saveContractBtn.textContent = "Add Contract";
-
-            cancelContractEditBtn.style.display = "none";
-
-        }
-
-        contractForm.reset();
-
-        loadContractsCRUD();
-
-        fetchProjects();
-
-        fetchBudget();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-});
-
-// ======================================
-// EDIT PROJECT
-// ======================================
-
-async function editProject(id) {
-
-    try {
-
-        const response = await fetch(`${API_BASE_URL}/projects/${id}`);
-
-        const result = await response.json();
-
-        const project = result.data;
-
-        document.getElementById("gigId").value = project.Gig_ID;
-
-        document.getElementById("clientId").value = project.Client_ID;
-
-        document.getElementById("projectTitle").value = project.Project_Title;
-
-        document.getElementById("budgetAmount").value = project.Budget_Amount;
-
-        document.getElementById("saveGigBtn").textContent = "Update Gig";
-
-        document.getElementById("cancelGigEditBtn").style.display = "inline-block";
-
-        editingProject = true;
+        await loadDashboard();
 
     }
 
@@ -786,123 +878,75 @@ async function editProject(id) {
 
 }
 
-// ======================================
-// DELETE PROJECT
-// ======================================
+// ==========================================
+// ADD / UPDATE CONTRACT
+// ==========================================
 
-async function deleteProject(id) {
-
-    const confirmDelete = confirm("Are you sure you want to delete this gig?");
-
-    if (!confirmDelete) return;
-
-    try {
-
-        await fetch(`${API_BASE_URL}/projects/${id}`, {
-
-            method: "DELETE"
-
-        });
-
-        loadProjectsCRUD();
-
-        fetchProjects();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-}
-
-// ======================================
-// CANCEL PROJECT EDIT
-// ======================================
-
-cancelGigEditBtn.addEventListener("click", () => {
-
-    editingProject = false;
-
-    gigForm.reset();
-
-    gigId.value = "";
-
-    saveGigBtn.textContent = "Add Gig";
-
-    cancelGigEditBtn.style.display = "none";
-
-});
-
-// ======================================
-// ADD / UPDATE PROJECT
-// ======================================
-
-gigForm.addEventListener("submit", async function (e) {
+contractForm.addEventListener("submit",async(e)=>{
 
     e.preventDefault();
 
-    const project = {
+    const contract={
 
-        Client_ID: clientId.value,
+        Gig_ID:contractGigId.value,
 
-        Project_Title: projectTitle.value,
+        Freelancer_ID:freelancerId.value,
 
-        Budget_Amount: budgetAmount.value
+        Contract_Status:contractStatus.value
 
     };
 
-    try {
+    try{
 
-        if (!editingProject) {
+        if(editingContract){
 
-            await fetch(`${API_BASE_URL}/projects`, {
+            await fetch(`${API_BASE_URL}/contracts/${contractId.value}`,{
 
-                method: "POST",
+                method:"PUT",
 
-                headers: {
-                    "Content-Type": "application/json"
+                headers:{
+                    "Content-Type":"application/json"
                 },
 
-                body: JSON.stringify(project)
+                body:JSON.stringify(contract)
 
             });
 
         }
 
-        else {
+        else{
 
-            await fetch(`${API_BASE_URL}/projects/${gigId.value}`, {
+            await fetch(`${API_BASE_URL}/contracts`,{
 
-                method: "PUT",
+                method:"POST",
 
-                headers: {
-                    "Content-Type": "application/json"
+                headers:{
+                    "Content-Type":"application/json"
                 },
 
-                body: JSON.stringify(project)
+                body:JSON.stringify(contract)
 
             });
 
-            editingProject = false;
-
-            saveGigBtn.textContent = "Add Gig";
-
-            cancelGigEditBtn.style.display = "none";
-
         }
 
-        gigForm.reset();
+        editingContract=false;
 
-        loadProjectsCRUD();
+        contractForm.reset();
 
-        fetchProjects();
+        contractId.value="";
+
+        saveContractBtn.textContent="Add Contract";
+
+        cancelContractEditBtn.style.display="none";
+
+        await loadContractsCRUD();
+
+        await loadDashboard();
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
@@ -910,18 +954,20 @@ gigForm.addEventListener("submit", async function (e) {
 
 });
 
-// ===============================
-// Load Everything
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
 
-    fetchUsers();
-    fetchFreelancers();
-    fetchProjects();
-    fetchBudget();
 
-    loadUsersCRUD();
-    loadProjectsCRUD();
-    loadContractsCRUD();
+// ==========================================
+// INITIALIZE
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    await loadDashboard();
+
+    await loadUsersCRUD();
+
+    await loadGigsCRUD();
+
+    await loadContractsCRUD();
 
 });
